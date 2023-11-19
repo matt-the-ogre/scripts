@@ -8,7 +8,7 @@ fi
 
 # Check if the parameter is provided
 if [ -z "$1" ]; then
-  echo "Usage: $0 <size-in-gb>"
+  echo "Usage: $0 <size-in-mb>"
   exit 1
 fi
 
@@ -47,5 +47,5 @@ rm ${FILENAME}
 
 # Report the results
 echo "Write and read operations completed."
-echo "Write took $WRITE_TIME seconds. That is $(echo "scale=2; $WRITE_TIME / $SIZE_MB" | bc) seconds per MB or $(echo "scale=4; $SIZE_MB / $WRITE_TIME" | bc) MB/sec."
-echo "Read took $READ_TIME seconds. That is $(echo "scale=2; $READ_TIME / $SIZE_MB" | bc) seconds per MB  or $(echo "scale=4; $SIZE_MB / $READ_TIME" | bc) MB/sec."
+echo "Write took $WRITE_TIME seconds. That is $(echo "scale=3; $WRITE_TIME / $SIZE_MB" | bc) seconds per MB or $(echo "scale=4; $SIZE_MB / $WRITE_TIME" | bc) MB/sec."
+echo "Read took $READ_TIME seconds. That is $(echo "scale=3; $READ_TIME / $SIZE_MB" | bc) seconds per MB  or $(echo "scale=4; $SIZE_MB / $READ_TIME" | bc) MB/sec."

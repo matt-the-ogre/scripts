@@ -1,0 +1,36 @@
+For your task, I'd recommend using the rsync command. It's pretty robust and suits your needs. Here's a command that should work well:
+
+bash
+Copy code
+
+rsync -avh --ignore-errors /source/directory/ /destination/directory/
+
+-a (archive) ensures all file attributes are preserved and also implies recursive copying.
+-v (verbose) gives you detailed output of the process.
+-h (human-readable) presents the file sizes in a readable format.
+--ignore-errors tells rsync to just log errors but continue copying.
+rsync is generally more efficient than cp for large numbers of files, especially if you end up needing to rerun the command, as it'll skip over files that are already copied.
+
+rsync -avh --remove-source-files --ignore-errors "/Volumes/Toshiba 1TB" "/Volumes/home/backup/Toshiba 1GB Backup"     
+
+rm -rf <directory>
+
+Just a heads-up: After running this, you might want to run a command to remove any empty directories left in the source, as rsync with --remove-source-files doesn't delete the directories themselves. You can do this with:
+
+find /source/directory/ -type d -empty -delete
+
+To make hidden files and folders visible in Finder on a Mac, you use a defaults write command. Specifically, for your case with the Library folder or any other hidden files and folders, here's what you need to do:
+
+Open your terminal and enter the following command:
+
+bash
+Copy code
+defaults write com.apple.finder AppleShowAllFiles TRUE
+After entering this command, you need to restart Finder for the changes to take effect. You can do this by executing:
+
+bash
+Copy code
+killall Finder
+This will relaunch Finder with the changes applied, and you should be able to see all hidden files and folders, including the Library folder.
+
+To revert this and hide the files again, just replace TRUE with FALSE in the first command and restart Finder again.
