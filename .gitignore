@@ -1,1 +1,5 @@
 .vscode/settings.json
+test_file.*
+*.xls*
+*.txt
+
