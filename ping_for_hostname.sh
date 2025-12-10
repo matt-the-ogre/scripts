@@ -1,29 +1,29 @@
 #!/bin/bash
 
-# Define the partial hostname
-partial_hostname="elgato"
+# Scan local network for devices matching a hostname pattern
+# Usage: ./ping_for_hostname.sh [hostname_pattern] [subnet] [range_start] [range_end]
 
-# Ping your local network subnet
-for ip in 192.168.7.{229..254}; do
-    echo "Pinging $ip"
-  # Ping each IP address
-  ping -c 1 $ip &> /dev/null
+partial_hostname="${1:-elgato}"
+subnet="${2:-192.168.7}"
+range_start="${3:-229}"
+range_end="${4:-254}"
 
-  # Check if the device responds
-  if [ $? -eq 0 ]; then
-    # Get the MAC address from the ARP table
-    mac=$(arp -a | grep "$ip" | awk '{print $4}')
-    echo "MAC: $mac"
+echo "Scanning for devices matching '$partial_hostname' on $subnet.$range_start-$range_end"
 
-    # Check if the MAC address exists
-    if [ ! -z "$mac" ]; then
-      # Search for the device by hostname using the MAC address
-      hostname=$(grep -i "$partial_hostname" /etc/hosts | awk '{print $2}')
+for ip in $(seq $range_start $range_end); do
+    full_ip="$subnet.$ip"
+    # Run pings in background for speed, with short timeout
+    (
+        ping -c 1 -W 1 "$full_ip" &> /dev/null && {
+            # Get hostname from ARP table (often includes mDNS names)
+            arp_entry=$(arp -a | grep "($full_ip)")
+            hostname=$(echo "$arp_entry" | awk '{print $1}')
+            mac=$(echo "$arp_entry" | awk '{print $4}')
 
-      # If a matching hostname is found, print the details
-      if [[ $hostname == *"$partial_hostname"* ]]; then
-        echo "Device found: $hostname, IP: $ip, MAC: $mac"
-      fi
-    fi
-  fi
+            if [[ "$hostname" == *"$partial_hostname"* ]]; then
+                echo "Found: $hostname - $full_ip ($mac)"
+            fi
+        }
+    ) &
 done
+wait
