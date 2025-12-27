@@ -2,7 +2,7 @@
 
 # Define source and destination folders
 source_folder="$HOME/Plex"
-destination_folder="$HOME/Library/CloudStorage/SynologyDrive-mattnoapple/Plex"
+destination_folder="/Library/CloudStorage/SynologyDrive-mattnoapple/Plex"
 
 # Perform two-way synchronization without deletions
 rsync -avh --update "$source_folder/" "$destination_folder/"
